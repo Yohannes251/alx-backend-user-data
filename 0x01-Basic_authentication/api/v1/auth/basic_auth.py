@@ -40,7 +40,15 @@ class BasicAuth(Auth):
         if decoded is None or type(decoded) != str or ':' not in decoded:
             return None, None
         output = decoded.split(':')
-        return output[0], output[1]
+        email = output[0]
+        pwd = output[1]
+        if decoded.count(':') > 1:
+            pwd = ''
+            for i in range(1, len(output)):
+                pwd += output[i]
+                pwd += ':'
+            pwd = pwd[:-1]
+        return email, pwd
 
     def user_object_from_credentials(self, user_email: str, user_pwd:
                                      str) -> TypeVar('User'):
