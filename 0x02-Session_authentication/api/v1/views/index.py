@@ -40,3 +40,7 @@ def forbidden():
     Raises 403 error
     """
     abort(403)
+
+#@app_views.route('/auth_session/login/', methods=['GET'], strict_slashes=False)
+#def custom():
+#    pass
