@@ -45,7 +45,7 @@ def login():
 @app.route("/sessions", methods=['DELETE'])
 def logout():
     """Handles DELETE request for /sessions endpoint"""
-    
+
     session_id = session.cookies['session_id']
     user = AUTH.get_user_from_session_id(session_id)
     if user:
