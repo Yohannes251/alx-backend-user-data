@@ -2,7 +2,7 @@
 """
     This module implements authorization
 """
-from bcrypt import hashpw, gensalt
+from bcrypt import hashpw, gensalt, checkpw
 from db import DB
 from user import User
 from sqlalchemy.orm.exc import NoResultFound
@@ -28,6 +28,17 @@ class Auth:
             raise ValueError(f'User {email} already exists')
         except NoResultFound:
             pwd = _hash_password(password)
-            user = self._db.add_user(email, password)
+            user = self._db.add_user(email, pwd)
 
             return user
+
+    def valid_login(self, email: str, password: str) -> bool:
+        """Checks recieved user credentials"""
+
+        try:
+            user = self._db.find_user_by(email=email)
+            if checkpw(bytes(password, 'utf-8'), user.hashed_password):
+                return True
+            return False
+        except NoResultFound:
+            return False
