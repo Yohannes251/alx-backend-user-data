@@ -52,3 +52,14 @@ class DB:
             raise NoResultFound
 
         return result
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """Locates user and updates its attributes from key word arguments"""
+
+        user = self.find_user_by(id=user_id)
+        for key, value in kwargs.items():
+            if key not in user.__dict__.keys():
+                raise ValueError
+            setattr(user, key, value)
+        self._session.add(user)
+        self._session.commit()
