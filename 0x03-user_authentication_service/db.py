@@ -5,6 +5,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
+
 
 from user import Base, User
 
@@ -39,3 +42,14 @@ class DB:
         session.commit()
 
         return user
+
+    def find_user_by(self, **kwargs):
+        """Returns first row in users table as filtered by kwargs"""
+        try:
+            result = self.__session.query(User).filter_by(**kwargs).first()
+        except AttributeError:
+            raise InvalidRequestError
+        if result is None:
+            raise NoResultFound
+
+        return result
